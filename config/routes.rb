@@ -1,4 +1,28 @@
 Rails.application.routes.draw do
+  get 'welcome/index'
+
+  get 'users/show'
+
+  get 'users/edit'
+
+  get 'users/update'
+
+  get 'users/finish_signup'
+
+  get 'users/index'
+
+  as :user do
+    get 'user/edit' => 'devise/registrations#edit', :as => 'edit_user_registration'    
+    put 'user' => 'devise/registrations#update', :as => 'user_registration'    
+    put "users/:id" => "users#update"        
+  end
+
+  devise_for :users, :controllers => { omniauth_callbacks: 'omniauth_callbacks', registrations: 'registrations' }
+  match '/users/:id/finish_signup' => 'users#finish_signup', via: [:get, :patch], :as => :finish_signup
+  
+  root 'welcome#index'
+  resources :users
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
